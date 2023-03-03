@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Link from 'components/Link';
 import Typography from 'components/Typography';
 import useAccessValidate from 'hooks/useAccessValidate';
+import {List} from "@material-ui/core";
+import {fetchProducts} from "../../../app/actions/products";
+import {fetchSignIn} from "../../../app/actions/user";
 
 const getClasses = makeStyles(() => ({
   container: {
@@ -11,21 +14,27 @@ const getClasses = makeStyles(() => ({
     flexDirection: 'column',
   },
 }));
-
 const Initial = ({
   authorities,
 }) => {
+  const dispatch=useDispatch();
+  useEffect(() => {
+        console.log("HI");
+     dispatch(fetchProducts());
+      }
+  );
   const classes = getClasses();
   const {
     availableItems,
   } = useSelector(({ reducer })=> reducer);
+  console.log(availableItems)
   const canSeeList = useAccessValidate({
     ownedAuthorities: authorities,
     neededAuthorities: ['МОЖНО_ВОТ_ЭТУ_ШТУКУ'],
   });
 
   return (
-    <div className={classes.container}>
+    <List className={classes.container} >
       {canSeeList && availableItems.map((item, index) => (
         <Link
           href={index % 2 === 0
@@ -49,7 +58,7 @@ const Initial = ({
           Не могу ничего показать :(
         </Typography>
       )}
-    </div>
+    </List>
   )
 };
 
