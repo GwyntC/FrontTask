@@ -53,9 +53,7 @@ export default (state = initialState, action) => {
         }
 
         case RECEIVE_USER:
-            console.log("hi from receive");
         case SUCCESS_SIGN_IN: {
-            console.log("hi from s_in");
             const {
                 authorities,
                 name,

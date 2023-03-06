@@ -67,7 +67,6 @@ const requestUser = () => ({
 });
 
 export const fetchUser = () => (dispatch) => {
-  console.log("hi");
   if (getToken()) {
     dispatch(requestUser());
     return getUser({

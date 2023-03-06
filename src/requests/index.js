@@ -11,6 +11,7 @@ const getHeaders = () => ({
 const fetchGet = ({ params = {}, url }) => {
   url = new URL(url);
   url.search = new URLSearchParams(params).toString();
+ // console.log(params);
   return fetch(
     url,
     {
@@ -19,7 +20,18 @@ const fetchGet = ({ params = {}, url }) => {
     }
   );
 };
-
+const fetchDelete=({params={},url})=>{
+  let id =params.id.id;
+  url=new URL(url+"/"+id.toString());
+ // url.search = new URLSearchParams(params).toString();
+  return fetch(
+      url,
+      {
+        headers: getHeaders(),
+        method: 'DELETE',
+      }
+  );
+};
 const fetchPost = ({ body, params = {}, url }) => {
   url = new URL(url);
   url.search = new URLSearchParams(params).toString();
@@ -48,7 +60,20 @@ export const getJson = ({
     throw response;
   });
 };
-
+export const deleteJson=({
+  params,
+  url,
+})=>{
+  return fetchDelete({
+    params,
+    url,
+  }).then((response)=>{
+    if(response.ok){
+      return response.json();
+    }
+    throw response;
+  });
+}
 export const postJson = ({
   body,
   params,
@@ -65,3 +90,4 @@ export const postJson = ({
     throw response;
   });
 };
+

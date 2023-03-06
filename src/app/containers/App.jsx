@@ -10,6 +10,7 @@ import IntlProvider from 'components/IntlProvider';
 import Header from 'components/Header';
 import PageInitial from 'pageProviders/Initial';
 import PageLogin from 'pageProviders/Login';
+import PageCreateEdit from 'pageProviders/CreateEdit'
 import * as PAGES from 'constants/pages';
 import {
   fetchUser,
@@ -40,6 +41,9 @@ const App = () => {
               </Route>
               <Route path={`/${PAGES.INITIAL}`}>
                 <PageInitial />
+              </Route>
+              <Route path={`/${PAGES.CREATEEDIT}`}>
+                <PageCreateEdit />
               </Route>
               <Redirect from="*" to={`/${PAGES.INITIAL}`} />
             </Switch>
