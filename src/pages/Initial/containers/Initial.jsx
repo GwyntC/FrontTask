@@ -8,6 +8,7 @@ import {Button, List} from "@material-ui/core";
 import {deleteProduct, fetchDeleteProduct, fetchProducts} from "../../../app/actions/products";
 import {fetchSignIn} from "../../../app/actions/user";
 import useLocationSearch from "../../../hooks/useLocationSearch";
+import {useHistory} from "react-router-dom";
 
 const getClasses = makeStyles(() => ({
   container: {
@@ -37,11 +38,16 @@ const Initial = ({
     ownedAuthorities: authorities,
     neededAuthorities: ['МОЖНО_ВОТ_ЭТУ_ШТУКУ'],
   });
+  const history=useHistory();
+  const routeChange = () =>{
+    let path = `createedit/22`;
+    history.push(path);
+  }
   return (
     <List className={classes.container} >
       <Button style={{
         backgroundColor:"#00a300"
-      }} variant="contained">CREATE</Button>
+      }} variant="contained" onClick={routeChange}>CREATE</Button>
       {canSeeList && availableItems.map(({id,modelName,country,price}) => (
         <Link
          // href={index % 2 === 0
@@ -59,7 +65,7 @@ const Initial = ({
            onMouseOver={buttonsShow}>  {modelName} {country} {price}
             <Button style={{
             backgroundColor: "#21b6ae",
-          }} variant="contained">UPDATE</Button>
+          }} variant="contained" onClick={routeChange}>UPDATE</Button>
             <Button style={{
               backgroundColor:"#ff0000"
             }} variant="contained" id={id} onClick={(e)=> {

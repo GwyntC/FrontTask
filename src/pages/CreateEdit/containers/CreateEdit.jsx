@@ -2,6 +2,7 @@ import {Button, TextField} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import useAccessValidate from "../../../hooks/useAccessValidate";
 import Typography from 'components/Typography';
+import {useHistory, useParams, useRouteMatch} from "react-router-dom";
 
 const getClasses = makeStyles(() => ({
     container: {
@@ -18,7 +19,12 @@ const CreateEdit = ({
         ownedAuthorities: authorities,
         neededAuthorities: ['МОЖНО_ВОТ_ЭТУ_ШТУКУ'],
     });
-    console.log(canSeeList);
+    const history=useHistory();
+    const routeChange = () =>{
+        let path = `initial`;
+        history.push(path);
+    }
+    const { id }=useParams();
     return (
         <div className={classes.container}>
             {canSeeList && (
@@ -32,7 +38,7 @@ const CreateEdit = ({
                     <TextField id="price" label="Price"/>
                     <TextField id="category" label="CategoryId"/>
                     </div>
-                    <Button>CREATE</Button>
+                    <Button onClick={routeChange}>CREATE</Button>
                 </Typography>
             )}
         </div>
