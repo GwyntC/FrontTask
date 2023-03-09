@@ -35,11 +35,11 @@ const fetchDelete=({params={},url})=>{
 const fetchPost = ({ body, params = {}, url }) => {
   url = new URL(url);
   url.search = new URLSearchParams(params).toString();
-
+ const look=JSON.stringify(body.body);
   return fetch(
     url,
     {
-      body: JSON.stringify(body),
+      body: look,
       headers: getHeaders(),
       method: 'POST',
     }
@@ -79,6 +79,7 @@ export const postJson = ({
   params,
   url,
 }) => {
+  console.log(body);
   return fetchPost({
     body,
     params,

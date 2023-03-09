@@ -41,7 +41,9 @@ const Initial = ({
   const history=useHistory();
   const routeChange = () =>{
     let path = `createedit/22`;
-    history.push(path);
+    history.push({
+      pathname:path,
+    });
   }
   return (
     <List className={classes.container} >
@@ -49,7 +51,7 @@ const Initial = ({
         backgroundColor:"#00a300"
       }} variant="contained" onClick={routeChange}>CREATE</Button>
       {canSeeList && availableItems.map(({id,modelName,country,price}) => (
-        <Link
+       // <Link
          // href={index % 2 === 0
          //   ? `https://www.google.com.ua/search?q=${coffee}&hl=ru`
          //   : undefined}
@@ -60,7 +62,7 @@ const Initial = ({
           //    search: `${location.search}&newProp=42`,
           //  }))
           //  : undefined}
-        >
+        //>
           <Typography
            onMouseOver={buttonsShow}>  {modelName} {country} {price}
             <Button style={{
@@ -73,7 +75,7 @@ const Initial = ({
             }
             }>DELETE</Button>
           </Typography>
-        </Link>
+       // </Link>
       ))}
       {!canSeeList && (
         <Typography>

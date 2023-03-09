@@ -1,5 +1,5 @@
 import config from "../../config";
-import {deleteJson, getJson} from "../../requests";
+import {deleteJson, getJson, postJson} from "../../requests";
 import {getToken} from "../../token";
 import {
     ERROR_RECEIVE_PRODUCTS, ERROR_SIGN_UP,
@@ -16,15 +16,15 @@ const getProducts = () => {
         BASE_URL,
         PRODUCTS_SERVICE,
     } = config;
-  //  let res=getJson({
+    //  let res=getJson({
     //    url: `${BASE_URL}${PRODUCTS_SERVICE}/math/examples/count/2`});
-   // console.log(res);
+    // console.log(res);
     return getJson({
         url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/get/`, //check correct url
 
     }).catch(() => {
-       // console.log("ERROR GET");
-        const storage=['ERROR GET'];
+        // console.log("ERROR GET");
+        const storage = ['ERROR GET'];
         return storage;
     });
 };
@@ -38,35 +38,58 @@ const requestProducts = () => ({
 });
 
 export const fetchProducts = () => (dispatch) => {
-   // console.log("I m here")
+    // console.log("I m here")
     //if (getToken()) {
     dispatch(requestProducts());
-   // console.log(getProducts());
+    // console.log(getProducts());
     return getProducts({
         dispatch,
     }).then(products => dispatch(successReturn(products)))
         .catch(() => dispatch(errorProducts()));
     // }
 }
-export const deleteProduct=(id)=>(dispatch)=>{//add reload option
-    return  delProduct({
+//change name and then action
+export const deleteProduct = (id) => (dispatch) => {//add reload option
+    return delProduct({
             dispatch,
-            id,}
+            id,
+        }
     ).then(dispatch(fetchProducts()))
         .catch(() => dispatch(errorProducts()));
 }
-const delProduct=(id)=>{
+const delProduct = (id) => {
     const {
         BASE_URL,
         PRODUCTS_SERVICE,
     } = config;
-    const identifier=id;
+    const identifier = id;
     return deleteJson({
         url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/delete`,
         params: identifier,//check correct url
     }).catch(() => {
         // console.log("ERROR GET");
-        const storage=['ERROR GET'];
+        const storage = ['ERROR DELETE'];
+        return storage;
+    });
+};
+
+export const fetchCreateProduct = (body) => (dispatch) => {//add reload and redux
+    return createProduct({
+            dispatch,
+            body}
+    ).then()
+        .catch();
+}
+const createProduct = (body) => {
+    const {
+        BASE_URL,
+        PRODUCTS_SERVICE,
+    } = config;//add parameters
+    return postJson({
+        url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/create`,
+        body,
+    }).catch(()=>{
+        const storage = ['ERROR CREATE'];
         return storage;
     });
 };

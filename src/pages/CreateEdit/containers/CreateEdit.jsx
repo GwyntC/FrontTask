@@ -3,6 +3,12 @@ import {makeStyles} from "@material-ui/core/styles";
 import useAccessValidate from "../../../hooks/useAccessValidate";
 import Typography from 'components/Typography';
 import {useHistory, useParams, useRouteMatch} from "react-router-dom";
+import useChangePage from "../../../hooks/useChangePage";
+import * as PAGES from "../../../constants/pages";
+import useLocationSearch from 'hooks/useLocationSearch';
+import {useDispatch} from "react-redux";
+import {fetchCreateProduct} from "../../../app/actions/products";
+import {useState} from "react";
 
 const getClasses = makeStyles(() => ({
     container: {
@@ -13,32 +19,54 @@ const getClasses = makeStyles(() => ({
 const CreateEdit = ({
                         authorities,
                     }) => {
-    console.log(authorities);
     const classes = getClasses();
     const canSeeList = useAccessValidate({
         ownedAuthorities: authorities,
         neededAuthorities: ['МОЖНО_ВОТ_ЭТУ_ШТУКУ'],
     });
-    const history=useHistory();
-    const routeChange = () =>{
-        let path = `initial`;
-        history.push(path);
+    const changePage = useChangePage();
+    const locationSearch = useLocationSearch();
+    const routeChange = () => {
+        changePage({
+            locationSearch: locationSearch.redirectLocationSearch
+                ? JSON.parse(locationSearch.redirectLocationSearch)
+                : locationSearch,
+            path: locationSearch.redirectPathname || `/${PAGES.INITIAL}`,
+        });
     }
-    const { id }=useParams();
+    const {id} = useParams();
+    const dispatch = useDispatch();
+    const valuesInit = {
+        modelName: "",
+        brandName: "",
+        country: "",
+        price: "",
+        categoryId: ""
+    };
+    const [data, setData] = useState(valuesInit);
+    const handleChange=(e)=>{
+        setData({ ...data, [e.target.name]: e.target.value });
+    }
     return (
         <div className={classes.container}>
             {canSeeList && (
                 <Typography>
                     <div>
-                    <TextField id="model" label="Model"/>
-                    <TextField id="brand" label="Brand"/>
+                        <TextField name="modelName" label="Model" value={data.model} onChange={handleChange}/>
+                        <TextField name="brandName" label="Brand" value={data.brand} onChange={handleChange}/>
                     </div>
                     <div>
-                    <TextField id="country" label="Country"/>
-                    <TextField id="price" label="Price"/>
-                    <TextField id="category" label="CategoryId"/>
+                        <TextField name="country" onChange={handleChange} label="Country" value={data.country}/>
+                        <TextField name="price" onChange={handleChange} label="Price" value={data.price}/>
+                        <TextField name="categoryId" onChange={handleChange} label="CategoryId" value={data.category}/>
                     </div>
-                    <Button onClick={routeChange}>CREATE</Button>
+                    <Button onClick={() =>
+                         dispatch(fetchCreateProduct(data,
+                         ))
+                         //routeChange();
+                       // console.log(JSON.stringify(data));
+                    }>SAVE</Button>
+                    <Button onClick={routeChange}>CANCEL</Button>
                 </Typography>
             )}
         </div>
