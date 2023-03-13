@@ -6,7 +6,6 @@ const initialState = {
     'как+выучить+js',
     'somePath',
     'Картина',
-    'anotherPath',
   ],
 };
 
@@ -15,14 +14,12 @@ export default (state = initialState,action)=>{// {type, payload}) => {//problem
     case RECEIVE_PRODUCTS:
     case SUCCESS_RECEIVE_PRODUCTS:
       console.log("success case",action.payload);
-      //  let availabe=JSON.parse(action.payload);
-      //  console.log(availabe);
       return {
         ...state,
         availableItems: action.payload,
       }
     default: {
-    //  console.log("help");
+      console.log("default");
       return state;
     }
   }

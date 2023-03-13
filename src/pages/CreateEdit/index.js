@@ -1,13 +1,13 @@
 import {applyMiddleware, combineReducers, createStore} from "redux";
-import reducer from "../Initial/reducers/reducer";
 import thunkMiddleware from "redux-thunk";
 import withAuthorities from "../../decorators/withAuthorities";
 import {Provider} from "react-redux";
 import React from "react";
 import CreateEdit from "./containers/CreateEdit";
+import changeReducer from "./reducers/changeReducer";
 
 const rootReducer = combineReducers({
-    reducer,
+    changeReducer,
 });
 const store = createStore(
     rootReducer,

@@ -1,13 +1,10 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {useDispatch, useSelector} from 'react-redux';
-import Link from 'components/Link';
 import Typography from 'components/Typography';
 import useAccessValidate from 'hooks/useAccessValidate';
 import {Button, List} from "@material-ui/core";
-import {deleteProduct, fetchDeleteProduct, fetchProducts} from "../../../app/actions/products";
-import {fetchSignIn} from "../../../app/actions/user";
-import useLocationSearch from "../../../hooks/useLocationSearch";
+import {deleteProduct, fetchProducts} from "../../../app/actions/products";
 import {useHistory} from "react-router-dom";
 
 const getClasses = makeStyles(() => ({
@@ -21,16 +18,15 @@ const Initial = ({
 }
 ) => {
   const buttonsShow=()=>{
+    console.log("hello");
   }
   const dispatch=useDispatch();
-  const dataFetchedRef = useRef(false);
+ // const dataFetchedRef = useRef(false);
   const classes = getClasses();
   const {
     availableItems,
   } = useSelector(({ reducer })=> reducer);
   useEffect(() => {
-        // console.log("HI");
-    console.log( dataFetchedRef.current)
         dispatch(fetchProducts());
       },[]
   );
@@ -39,8 +35,8 @@ const Initial = ({
     neededAuthorities: ['МОЖНО_ВОТ_ЭТУ_ШТУКУ'],
   });
   const history=useHistory();
-  const routeChange = () =>{
-    let path = `createedit/22`;
+  const routeChange = (id) =>{
+    let path = `createedit/`+id.id;
     history.push({
       pathname:path,
     });
@@ -51,31 +47,18 @@ const Initial = ({
         backgroundColor:"#00a300"
       }} variant="contained" onClick={routeChange}>CREATE</Button>
       {canSeeList && availableItems.map(({id,modelName,country,price}) => (
-       // <Link
-         // href={index % 2 === 0
-         //   ? `https://www.google.com.ua/search?q=${coffee}&hl=ru`
-         //   : undefined}
-        //  to={index % 2 !== 0
-         //>  ? (location => ({
-          //    ...location,
-          //    pathname: `/${item}`,
-          //    search: `${location.search}&newProp=42`,
-          //  }))
-          //  : undefined}
-        //>
           <Typography
-           onMouseOver={buttonsShow}>  {modelName} {country} {price}
+           onMouseEnter={buttonsShow} onMouseLeave={buttonsShow}>  {modelName} {country} {price}
             <Button style={{
             backgroundColor: "#21b6ae",
-          }} variant="contained" onClick={routeChange}>UPDATE</Button>
+          }} variant="contained" onClick={()=>routeChange({id})}>UPDATE</Button>
             <Button style={{
               backgroundColor:"#ff0000"
-            }} variant="contained" id={id} onClick={(e)=> {
+            }} variant="contained" id={id} onClick={()=> {
               dispatch(deleteProduct({id}))
             }
             }>DELETE</Button>
           </Typography>
-       // </Link>
       ))}
       {!canSeeList && (
         <Typography>

@@ -2,13 +2,14 @@ import {Button, TextField} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import useAccessValidate from "../../../hooks/useAccessValidate";
 import Typography from 'components/Typography';
-import {useHistory, useParams, useRouteMatch} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import useChangePage from "../../../hooks/useChangePage";
 import * as PAGES from "../../../constants/pages";
 import useLocationSearch from 'hooks/useLocationSearch';
-import {useDispatch} from "react-redux";
-import {fetchCreateProduct} from "../../../app/actions/products";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchProduct, fetchUpdateProduct} from "../../../app/actions/products";
 import {useState} from "react";
+import {useEffect} from "react";
 
 const getClasses = makeStyles(() => ({
     container: {
@@ -34,16 +35,30 @@ const CreateEdit = ({
             path: locationSearch.redirectPathname || `/${PAGES.INITIAL}`,
         });
     }
+    let check=false;
     const {id} = useParams();
     const dispatch = useDispatch();
-    const valuesInit = {
-        modelName: "",
-        brandName: "",
-        country: "",
-        price: "",
-        categoryId: ""
+    const availableItems= useSelector(({ changeReducer })=> changeReducer);
+    useEffect(() => {//use state after useSelect;check if available change then change:
+            dispatch(fetchProduct(id));
+        },[]
+    );
+    //console.log(availableItems.contains);
+    let valuesInit;
+    valuesInit = {
+        modelName: availableItems.availableItems.modelName,
+        brandName: availableItems.availableItems.brandName,
+        country: availableItems.availableItems.country,
+        price: availableItems.availableItems.price,
+        categoryId: availableItems.availableItems.categoryId
     };
     const [data, setData] = useState(valuesInit);
+    useEffect(()=>{
+        if(availableItems.availableItems.modelName!==undefined) {
+            setData(availableItems.availableItems
+            );
+        }
+       },[availableItems]);
     const handleChange=(e)=>{
         setData({ ...data, [e.target.name]: e.target.value });
     }
@@ -52,18 +67,27 @@ const CreateEdit = ({
             {canSeeList && (
                 <Typography>
                     <div>
-                        <TextField name="modelName" label="Model" value={data.model} onChange={handleChange}/>
-                        <TextField name="brandName" label="Brand" value={data.brand} onChange={handleChange}/>
+                        <TextField name="modelName" label="Model" value={data.modelName} onChange={handleChange}/>
+                        <TextField name="brandName" label="Brand" value={data.brandName} onChange={handleChange}/>
                     </div>
                     <div>
                         <TextField name="country" onChange={handleChange} label="Country" value={data.country}/>
                         <TextField name="price" onChange={handleChange} label="Price" value={data.price}/>
-                        <TextField name="categoryId" onChange={handleChange} label="CategoryId" value={data.category}/>
+                        <TextField name="categoryId" onChange={handleChange} label="CategoryId" value={data.categoryId}/>
                     </div>
-                    <Button onClick={() =>
-                         dispatch(fetchCreateProduct(data,
-                         ))
-                         //routeChange();
+                    <Button onClick={() => //{//added then to redirect
+                       // dispatch(fetchCreateProduct(data,
+                        dispatch(fetchUpdateProduct({
+                             body:data,
+                            id:id,
+                            }
+                        )).then(()=>{
+                               routeChange()
+                            }
+                            //  routeChange,
+                        )
+                        //routeChange();
+                    //}
                        // console.log(JSON.stringify(data));
                     }>SAVE</Button>
                     <Button onClick={routeChange}>CANCEL</Button>

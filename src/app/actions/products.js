@@ -1,10 +1,10 @@
 import config from "../../config";
-import {deleteJson, getJson, postJson} from "../../requests";
-import {getToken} from "../../token";
+import {deleteJson, getJson, postJson, putJson} from "../../requests";
 import {
+    ERROR_RECEIVE_PRODUCT,
     ERROR_RECEIVE_PRODUCTS, ERROR_SIGN_UP,
     RECEIVE_PRODUCTS,
-    REQUEST_PRODUCTS, SUCCESS_RECEIVE_PRODUCTS, SUCCESS_SIGN_UP
+    REQUEST_PRODUCTS, SUCCESS_RECEIVE_PRODUCT, SUCCESS_RECEIVE_PRODUCTS, SUCCESS_SIGN_UP
 } from "../constants/actionTypes";
 
 const errorReceiveProducts = () => ({
@@ -16,9 +16,7 @@ const getProducts = () => {
         BASE_URL,
         PRODUCTS_SERVICE,
     } = config;
-    //  let res=getJson({
-    //    url: `${BASE_URL}${PRODUCTS_SERVICE}/math/examples/count/2`});
-    // console.log(res);
+
     return getJson({
         url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/get/`, //check correct url
 
@@ -36,6 +34,28 @@ const receiveProducts = (products) => ({
 const requestProducts = () => ({
     type: REQUEST_PRODUCTS,
 });
+
+const getProduct = (id) => {
+    const {
+        BASE_URL,
+        PRODUCTS_SERVICE,
+    } = config;
+    return getJson({
+        url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/get/`,
+        params: id,
+    }).catch(() => {
+        const storage = ['ERROR GET'];
+        return storage;
+    });
+};
+
+export const fetchProduct = (id) => (dispatch) => {
+    return getProduct({
+        dispatch,
+        id,
+    }).then(product => dispatch(successReturnProduct(product)))
+        .catch(() => dispatch(errorProduct()));
+}
 
 export const fetchProducts = () => (dispatch) => {
     // console.log("I m here")
@@ -76,7 +96,8 @@ const delProduct = (id) => {
 export const fetchCreateProduct = (body) => (dispatch) => {//add reload and redux
     return createProduct({
             dispatch,
-            body}
+            body
+        }
     ).then()
         .catch();
 }
@@ -88,11 +109,42 @@ const createProduct = (body) => {
     return postJson({
         url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/create`,
         body,
-    }).catch(()=>{
+    }).catch(() => {
         const storage = ['ERROR CREATE'];
         return storage;
     });
 };
+
+export const fetchUpdateProduct = ({//syntax importance!!!
+                                       body,
+                                       id,
+                                   }) => (dispatch) => {
+    return updateProduct({
+        //   dispatch,
+        body,
+        id,
+    }).then((response) => {
+    })
+        .catch();
+}
+
+const updateProduct = ({
+                           body,
+                           id
+                       }) => {//need correct pass parameters
+    const {
+        BASE_URL,
+        PRODUCTS_SERVICE
+    } = config;
+    return putJson({
+        url: `${BASE_URL}${PRODUCTS_SERVICE}/api/products/update`,
+        params: id,
+        body,
+    }).catch(() => {
+        const storage = ['ERROR UPDATE'];
+        return storage;
+    })
+}
 const errorProducts = errors => ({
     payload: errors,
     type: ERROR_RECEIVE_PRODUCTS,
@@ -101,3 +153,13 @@ const successReturn = (products) => ({
     type: SUCCESS_RECEIVE_PRODUCTS,
     payload: products,
 });
+
+const successReturnProduct = (product) => ({
+    type: SUCCESS_RECEIVE_PRODUCT,
+    payload: product,
+});
+const errorProduct = errors => ({
+    payload: errors,
+    type: ERROR_RECEIVE_PRODUCT,
+});
+//adding success for product
