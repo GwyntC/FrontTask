@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import {useDispatch, useSelector} from 'react-redux';
 import Typography from 'components/Typography';
 import useAccessValidate from 'hooks/useAccessValidate';
-import {Button, List} from "@material-ui/core";
+import List from 'components/List';
+import Button from 'components/Button';
 import {deleteProduct, fetchProducts} from "../../../app/actions/products";
 import {useHistory} from "react-router-dom";
 
@@ -18,8 +19,11 @@ const Initial = ({
 }
 ) => {
   const [showResults, setShowResults] = React.useState(false)
-  const buttonsShow=()=>{
+  const [elementId,setElementId]=React.useState(0);
+  const buttonsShow=(id)=>{
     setShowResults(true);
+    setElementId(id.id);
+    console.log(elementId);
   }
   const buttonsHide=()=>{
     setShowResults(false);
@@ -52,11 +56,11 @@ const Initial = ({
       }} variant="contained" onClick={routeChange}>CREATE</Button>
       {canSeeList && availableItems.map(({id,modelName,country,price}) => (
           <Typography
-           onMouseEnter={buttonsShow} onMouseLeave={buttonsHide}>  {modelName} {country} {price}
-            {showResults?<Button style={{
+           onMouseEnter={()=>buttonsShow({id})} onMouseLeave={buttonsHide}>  {modelName} {country} {price}
+            {showResults&&elementId===id?<Button style={{
               backgroundColor: "#21b6ae",
             }} variant="contained" onClick={() => routeChange({id})}>UPDATE</Button>:null }
-            {showResults?<Button style={{
+            {showResults&&elementId===id?<Button style={{
               backgroundColor:"#ff0000"
             }} variant="contained" id={id} onClick={()=> {
               dispatch(deleteProduct({id}))

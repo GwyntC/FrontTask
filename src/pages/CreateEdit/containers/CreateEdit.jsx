@@ -1,4 +1,5 @@
-import {Button, TextField} from "@material-ui/core";
+import Button from 'components/Button';
+import TextField from 'components/TextField';
 import {makeStyles} from "@material-ui/core/styles";
 import useAccessValidate from "../../../hooks/useAccessValidate";
 import Typography from 'components/Typography';
@@ -8,8 +9,7 @@ import * as PAGES from "../../../constants/pages";
 import useLocationSearch from 'hooks/useLocationSearch';
 import {useDispatch, useSelector} from "react-redux";
 import {fetchProduct, fetchUpdateProduct} from "../../../app/actions/products";
-import {useState} from "react";
-import {useEffect} from "react";
+import {useState,useEffect} from "react";
 
 const getClasses = makeStyles(() => ({
     container: {
