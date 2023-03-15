@@ -17,8 +17,12 @@ const Initial = ({
   authorities,
 }
 ) => {
+  const [showResults, setShowResults] = React.useState(false)
   const buttonsShow=()=>{
-    console.log("hello");
+    setShowResults(true);
+  }
+  const buttonsHide=()=>{
+    setShowResults(false);
   }
   const dispatch=useDispatch();
  // const dataFetchedRef = useRef(false);
@@ -48,16 +52,16 @@ const Initial = ({
       }} variant="contained" onClick={routeChange}>CREATE</Button>
       {canSeeList && availableItems.map(({id,modelName,country,price}) => (
           <Typography
-           onMouseEnter={buttonsShow} onMouseLeave={buttonsShow}>  {modelName} {country} {price}
-            <Button style={{
-            backgroundColor: "#21b6ae",
-          }} variant="contained" onClick={()=>routeChange({id})}>UPDATE</Button>
-            <Button style={{
+           onMouseEnter={buttonsShow} onMouseLeave={buttonsHide}>  {modelName} {country} {price}
+            {showResults?<Button style={{
+              backgroundColor: "#21b6ae",
+            }} variant="contained" onClick={() => routeChange({id})}>UPDATE</Button>:null }
+            {showResults?<Button style={{
               backgroundColor:"#ff0000"
             }} variant="contained" id={id} onClick={()=> {
               dispatch(deleteProduct({id}))
             }
-            }>DELETE</Button>
+            }>DELETE</Button>:null}
           </Typography>
       ))}
       {!canSeeList && (

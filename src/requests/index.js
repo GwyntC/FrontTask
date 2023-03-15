@@ -42,7 +42,14 @@ const fetchDelete = ({params = {}, url}) => {
 const fetchPost = ({body, params = {}, url}) => {
     url = new URL(url);
     url.search = new URLSearchParams(params).toString();
-    const look = JSON.stringify(body.body);
+    let look;
+    if(body==undefined) {
+       // const look = JSON.stringify(body.body);
+        look="";
+    }
+    else {
+        look= JSON.stringify(body.body);
+    }
     return fetch(
         url,
         {
